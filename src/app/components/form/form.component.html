@@ -1,0 +1,207 @@
+<mat-card>
+  <mat-card-header>
+    <h2 style="margin: 0 0 0 -1.875rem; padding: 2rem;">Reactive Form Project</h2>
+  </mat-card-header>
+
+  <mat-card-content>
+    <form 
+      action="#"
+      [formGroup]="registerForm"
+    >
+      <mat-form-field>
+        <mat-label>Nome</mat-label>
+        <input
+          type="text"
+          matInput
+          placeholder="ex: Eduard"
+          formControlName="name"
+          style="width: 200px;"
+        />
+
+        <mat-error>
+          <span *ngIf="registerForm.get('name')?.hasError('required')">
+            ***Informação obrigatória!
+          </span>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Sobrenome</mat-label>
+        <input
+          type="text"
+          placeholder="ex: Elric"
+          matInput
+          formControlName="lastname"
+        />
+
+        <mat-error>
+          <span *ngIf="registerForm.get('lastname')?.hasError('required')">
+            ***Informação obrigatória!
+          </span>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>CPF</mat-label>
+        <input
+          type="text"
+          placeholder="ex: 01010101010"
+          matInput
+          formControlName="cpf"
+        />
+
+        <mat-error>
+          <span *ngIf="registerForm.get('cpf')?.hasError('required')">
+            ***Informação obrigatória!
+          </span>
+          <span *ngIf="registerForm.get('cpf')?.hasError('minlength')">
+            *Número insuficiente de caracteres
+          </span>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field
+        formArrayName="phoneNumbers"
+        *ngFor="let ctrl of phoneNumberArray.controls; index as i"
+      >
+        <mat-label *ngIf="i==0">Telefone</mat-label>
+        <mat-label *ngIf="i!=0">Telefone Adicional {{i}}</mat-label>
+        <div class="number">
+          <input 
+            type="text" 
+            matInput 
+            placeholder="ex: 11901010101"
+            [formControlName]="i"
+          >
+          <button
+            type="button"
+            *ngIf="i == 0"
+            mat-icon-button
+            (click)="addPhone()"
+          >
+            <mat-icon>+</mat-icon>
+          </button>
+          <button
+            type="button"
+            *ngIf="i != 0"
+            mat-icon-button
+            (click)="removePhone(i)"
+          >
+            <mat-icon>-</mat-icon>
+          </button>
+        </div>
+        <mat-error>
+          <span *ngIf="phoneNumberArray.controls[i].hasError('required')">
+            ***Informação obrigatória!
+          </span>
+          <span *ngIf="phoneNumberArray.controls[i].hasError('minlength')">
+            *Número insuficiente de caracteres
+          </span>
+        </mat-error>
+    </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Endereço</mat-label>
+        <input
+          type="text"
+          placeholder="ex: Av. da Liberdade, 363 - Liberdade, São Paulo - SP"
+          matInput
+          formControlName="adress"
+        />
+
+        <mat-error>
+          <span *ngIf="registerForm.get('adress')?.hasError('required')">
+            ***Informação obrigatória!
+          </span>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Complemento</mat-label>
+        <input
+          type="text"
+          placeholder="ex: Ap 01"
+          matInput
+          formControlName="complement"
+        />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Username</mat-label>
+        <input
+          type="text"
+          placeholder="ex: AlquimistaDeAço"
+          matInput
+          formControlName="username"
+        />
+
+        <mat-error>
+          <span *ngIf="registerForm.get('username')?.hasError('required')">
+            ***Informação obrigatória!
+          </span>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Senha</mat-label>
+        <input
+          type="password"
+          placeholder="ex: trocaequivalente1"
+          matInput
+          #inputPassword
+          formControlName="password"
+        />
+
+        <mat-error>
+          <span *ngIf="registerForm.get('password')?.hasError('required')">
+            ***Informação obrigatória!
+          </span>
+          <span *ngIf="registerForm.get('password')?.hasError('minlength')">
+            *Mínimo 8 caracteres
+          </span>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Confirme sua senha</mat-label>
+        <input
+          type="password"
+          placeholder="Repita a mesma senha do campo acima"
+          matInput
+          #inputPasswordConfirmation
+          formControlName="passwordConfirmation"
+        />
+
+        <mat-error>
+          <span *ngIf="registerForm.get('passwordConfirmation')?.hasError('required')">
+            ***Informação obrigatória!
+          </span>
+          <span *ngIf="registerForm.get('passwordConfirmation')?.hasError('minlength')">
+            *Mínimo 8 caracteres
+          </span>
+          <span *ngIf="inputPasswordConfirmation.value != inputPassword.value && inputPasswordConfirmation.value.length > 8" >
+            *As senhas precisam ser idênticas
+          </span>
+        </mat-error>
+      </mat-form-field>
+    </form>
+  </mat-card-content>
+
+  <mat-card-actions>
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      (click)="openDialog()"
+      [disabled]="
+      registerForm.get('name')?.invalid ||
+      registerForm.get('lastname')?.invalid ||
+      registerForm.get('cpf')?.invalid ||
+      phoneNumberArray.controls[0].invalid||
+      registerForm.get('username')?.invalid ||
+      registerForm.get('password')?.invalid ||
+      registerForm.get('passwordConfirmation')?.invalid
+      "
+    >Enviar</button>
+  </mat-card-actions>
+</mat-card>
